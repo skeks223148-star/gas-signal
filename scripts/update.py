@@ -187,8 +187,10 @@ def main():
     latest = load(latest_path, {})
 
     mode = args.mode
-    if mode == "auto":
-        mode = "full" if not latest or not os.path.exists(os.path.join(OUT_DIR, "regions.json")) else "light"
+    no_data = not latest or not os.path.exists(os.path.join(OUT_DIR, "regions.json"))
+    if mode == "auto" or (mode in ("light", "weekly") and no_data):
+        # 첫 실행처럼 데이터가 없으면 언제 돌든 전체 수집부터
+        mode = "full" if no_data else "light"
 
     calls = state.setdefault("calls", {})
     used = calls.get(today_key, 0)
