@@ -1,13 +1,13 @@
-=== 2026-10-30 16:02 빌드
-v22.23.4
-10.9.9
-npm warn EBADENGINE Unsupported engine {
-npm warn EBADENGINE   package: '@apps-in-toss/ait-format@1.0.0',
-npm warn EBADENGINE   required: { node: '>=24' },
-npm warn EBADENGINE   current: { node: 'v22.23.4', npm: '10.9.9' }
-npm warn EBADENGINE }
+=== 2026-10-30 16:03 빌드
+v24.22.1
+11.19.1
 
-added 158 packages in 10s
+added 159 packages in 2s
+npm warn install-scripts 2 packages have install scripts not yet covered by allowScripts:
+npm warn install-scripts   esbuild@0.25.12 (postinstall: node install.js)
+npm warn install-scripts   protobufjs@7.6.6 (postinstall: node scripts/postinstall)
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
 
 > gas-signal-app@1.0.0 build
 > vite build && ait build
@@ -20,11 +20,11 @@ computing gzip size...
 [2mdist/[22m[32mindex.html                 [39m[1m[2m 0.48 kB[22m[1m[22m[2m │ gzip:  0.36 kB[22m
 [2mdist/[22m[2massets/[22m[35mindex-D9w9hDyl.css  [39m[1m[2m 5.73 kB[22m[1m[22m[2m │ gzip:  1.75 kB[22m
 [2mdist/[22m[2massets/[22m[36mindex-CkEXSFxj.js   [39m[1m[2m75.81 kB[22m[1m[22m[2m │ gzip: 24.58 kB[22m
-[32m✓ built in 625ms[39m
+[32m✓ built in 546ms[39m
 │
 ◆  앱인토스 빌드가 완료되었습니다. (gas-signal.ait)
 │
-●  deploymentId: 01a18b9e-2736-74c4-81e0-47cd1a1701b4
+●  deploymentId: 01a18b9f-54ce-7068-973f-265055fd0d61
 === 빌드 결과: success
 --- 설치된 SDK 버전
 3.9.0
@@ -32,7 +32,7 @@ computing gzip size...
 app/gas-signal.ait
 --- dist
 total 16
-drwxr-xr-x 3 runner runner 4096 Oct 30 07:02 .
-drwxr-xr-x 5 runner runner 4096 Oct 30 07:02 ..
-drwxr-xr-x 2 runner runner 4096 Oct 30 07:02 assets
--rw-r--r-- 1 runner runner  483 Oct 30 07:02 index.html
+drwxr-xr-x 3 runner runner 4096 Oct 30 07:03 .
+drwxr-xr-x 5 runner runner 4096 Oct 30 07:03 ..
+drwxr-xr-x 2 runner runner 4096 Oct 30 07:03 assets
+-rw-r--r-- 1 runner runner  483 Oct 30 07:03 index.html
