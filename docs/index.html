@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>기름값 신호등 데이터</title>
+<style>
+  :root { --bg:#f7f8fa; --card:#fff; --ink:#191f28; --sub:#6b7684; --line:#e5e8eb; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#101216; --card:#1b1e24; --ink:#eef0f3; --sub:#9aa3ae; --line:#2b3038; } }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 -apple-system, "Apple SD Gothic Neo", "Pretendard", sans-serif; }
+  main { max-width:560px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  p.sub { color:var(--sub); margin:0 0 20px; font-size:14px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px; margin-bottom:12px; }
+  .row { display:flex; justify-content:space-between; gap:12px; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; }
+  .red{background:#f04452}.yellow{background:#ffb331}.green{background:#03b26c}
+  small { color:var(--sub); }
+  code { font-size:13px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>기름값 신호등 데이터 상태</h1>
+  <p class="sub">토스 미니앱이 읽는 공개 데이터예요. 자료: 한국석유공사 오피넷</p>
+  <div id="out" class="card">불러오는 중…</div>
+  <div class="card"><small>파일: <code>data/latest.json</code>, <code>data/regions.json</code>, <code>data/region/&lt;시도코드&gt;.json</code></small></div>
+</main>
+<script>
+fetch("data/latest.json", { cache: "no-store" })
+  .then(r => r.json())
+  .then(d => {
+    const rows = Object.entries(d.signal || {}).map(([name, s]) => {
+      const n = (d.national || {})[name] || {};
+      return `<div class="row"><div><span class="dot ${s.level}"></span><b>${name}</b> ${s.title}<br><small>${(s.reasons || []).join(" · ")}</small></div>
+              <div style="text-align:right"><b>${n.price ? n.price.toLocaleString() + "원" : "-"}</b><br><small>${n.diff != null ? (n.diff > 0 ? "+" : "") + n.diff + "원" : ""}</small></div></div>`;
+    }).join("<hr style='border:0;border-top:1px solid var(--line)'>");
+    const tax = d.tax_cut ? `<p><small>${d.tax_cut.text} · D-${d.tax_cut.days_left}</small></p>` : "";
+    document.getElementById("out").innerHTML = rows + tax + `<p><small>갱신: ${d.updated_at}</small></p>`;
+  })
+  .catch(() => { document.getElementById("out").textContent = "아직 데이터가 없어요. 첫 자동 실행을 기다려 주세요."; });
+</script>
+</body>
+</html>

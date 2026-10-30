@@ -1,0 +1,21 @@
+{
+  "_사용법": "사람이 직접 고치는 파일. tax_cut.status: pending(연장 여부 미정) / extended(연장됨) / ending(종료 확정). outlook: 한국석유공사가 매주 토요일 내는 '다음 주 전망'을 direction(up/down/flat), published(발표일 YYYY-MM-DD), source에 적는다. 8일이 지나면 자동으로 무시된다.",
+  "tax_cut": {
+    "end_date": "2026-11-30",
+    "status": "pending",
+    "extended_to": null,
+    "rates": "휘발유 15%, 경유·LPG 부탄 25% 인하 중",
+    "won_per_liter": {
+      "휘발유": 122,
+      "경유": 145,
+      "LPG": 51
+    }
+  },
+  "outlook": {
+    "direction": null,
+    "published": null,
+    "source": "한국석유공사",
+    "note": ""
+  },
+  "notice": null
+}
