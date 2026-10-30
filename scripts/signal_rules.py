@@ -183,11 +183,12 @@ def tax_card(events: dict, today: date) -> dict | None:
     }
 
 
+# 토스 스마트 발송 템플릿 규칙: 제목 7자 이하 명사형·마침표 없음, 본문 25자 이하 해요체·마침표, 기능성 정보만
 PUSH_TEMPLATES = {
-    ("휘발유", "red"): "⛽ 휘발유값이 오를 전망이에요. 이번 주 넣을 곳 확인하기",
-    ("휘발유", "green"): "⛽ 휘발유값이 내리는 중이에요. 우리 동네 최저가 확인하기",
-    ("경유", "red"): "⛽ 경유값이 오를 전망이에요. 이번 주 넣을 곳 확인하기",
-    ("경유", "green"): "⛽ 경유값이 내리는 중이에요. 우리 동네 최저가 확인하기",
+    ("휘발유", "red"): ("휘발유 신호", "휘발유값이 오를 전망이에요."),
+    ("휘발유", "green"): ("휘발유 신호", "휘발유값이 내리는 중이에요."),
+    ("경유", "red"): ("경유 신호", "경유값이 오를 전망이에요."),
+    ("경유", "green"): ("경유 신호", "경유값이 내리는 중이에요."),
 }
 
 
@@ -197,10 +198,10 @@ def push_suggestions(prev: dict, now: dict, tax: dict | None) -> list[dict]:
     for name, sig in now.items():
         before = (prev.get(name) or {}).get("level")
         if before and before != sig["level"] and (name, sig["level"]) in PUSH_TEMPLATES:
-            out.append({"product": name, "from": before, "to": sig["level"],
-                        "message": PUSH_TEMPLATES[(name, sig["level"])]})
+            title, body = PUSH_TEMPLATES[(name, sig["level"])]
+            out.append({"product": name, "from": before, "to": sig["level"], "title": title, "body": body})
     if tax and tax["status"] == "ending" and 0 <= tax["days_left"] <= 7:
-        won = tax["won_per_liter"].get("휘발유")
-        out.append({"product": "공통", "from": None, "to": "red",
-                    "message": f"⛽ {tax['days_left']}일 뒤 유류세 인하가 끝나요. 리터당 최대 {won}원 오르기 전에 넣을 곳 확인하기"})
-    return out
+        out.append({"product": "공통", "from": None, "to": "red", "title": "유류세 마감",
+                    "body": f"유류세 인하가 {tax['days_left']}일 뒤 끝나요." if tax["days_left"] else "오늘 유류세 인하가 끝나요."})
+    # 글자 수 규칙을 넘는 문구는 내보내지 않음 (수집이 멈추지 않도록 예외 대신 걸러냄)
+    return [m for m in out if len(m["title"]) <= 7 and len(m["body"]) <= 25]

@@ -280,7 +280,7 @@ def main():
     for name, sig in signals.items():
         print(f"  {name}: {sig['level']} — {sig['title']} | " + " / ".join(sig["reasons"]))
     if pushes:
-        print("알림 제안:", *[p["message"] for p in pushes], sep="\n  ")
+        print("알림 제안:", *[f'[{p["title"]}] {p["body"]}' for p in pushes], sep="\n  ")
     if errors:
         print("경고:", *errors, sep="\n  ")
     # 오피넷 접속 자체가 실패했고 결과가 하나도 없으면 실패로 표시해 알 수 있게 한다

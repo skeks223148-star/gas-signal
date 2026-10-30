@@ -1,0 +1,17 @@
+{
+  "name": "gas-signal-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3000",
+    "build": "vite build && ait build"
+  },
+  "dependencies": {
+    "@apps-in-toss/web-framework": "^3.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vite": "^6.0.0"
+  }
+}

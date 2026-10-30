@@ -1,0 +1,61 @@
+name: 미니앱 빌드
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "app/**"
+      - ".github/workflows/build-app.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-app
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: 설치 · 빌드
+        id: build
+        working-directory: app
+        run: |
+          set -o pipefail
+          mkdir -p ../release
+          { echo "=== $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M') 빌드"; node -v; npm -v; } > ../release/build-log.txt
+          npm install --no-audit --no-fund 2>&1 | tail -40 | tee -a ../release/build-log.txt
+          npm run build 2>&1 | tail -80 | tee -a ../release/build-log.txt
+
+      - name: 결과 정리
+        if: always()
+        run: |
+          {
+            echo "=== 빌드 결과: ${{ steps.build.outcome }}"
+            echo "--- 설치된 SDK 버전"; node -e "try{console.log(require('./app/node_modules/@apps-in-toss/web-framework/package.json').version)}catch(e){console.log('없음')}"
+            echo "--- .ait 파일"; find app -path app/node_modules -prune -o -name "*.ait" -print
+            echo "--- dist"; ls -la app/dist 2>/dev/null || true
+          } >> release/build-log.txt
+          f=$(find app -path app/node_modules -prune -o -name "*.ait" -print | head -1)
+          rm -f release/*.ait
+          if [ -n "$f" ]; then cp "$f" release/gas-signal.ait; ls -la release; fi
+
+      - name: 저장소에 저장
+        if: always()
+        run: |
+          git config user.name "gas-signal-bot"
+          git config user.email "gas-signal-bot@users.noreply.github.com"
+          git add release
+          [ -f app/package-lock.json ] && git add app/package-lock.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "미니앱 빌드 ${{ steps.build.outcome }} $(TZ=Asia/Seoul date '+%Y-%m-%d %H:%M')"
+          for i in 1 2 3; do git pull --rebase --autostash && git push && break; sleep 5; done

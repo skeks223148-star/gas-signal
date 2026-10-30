@@ -48,3 +48,11 @@
 ```bash
 bash tests/run_scenarios.sh /tmp/gas-test   # 샘플 응답으로 7가지 상황 점검 (오피넷 호출 없음)
 ```
+
+## 토스 미니앱 (`app/`)
+
+- 화면 코드: `app/src/` (view.js 화면 조각, main.js 동작, sdk.js 토스 SDK 연결, config.js 운영 설정)
+- `app/**`를 고쳐 올리면 GitHub Actions가 자동으로 빌드해서 `release/gas-signal.ait`와 `release/build-log.txt`를 저장해요.
+- 콘솔 '앱 출시'에서 `release/gas-signal.ait`를 올리면 돼요. 영문 앱 이름은 `gas-signal` (apps-in-toss.config.ts와 같아야 함).
+- 광고·알림은 `app/src/config.js`에 콘솔에서 받은 ID를 넣으면 켜져요. 비워두면 꺼진 상태로 동작해요.
+- 미리보기: `python3 tests/build_preview.py 미리보기.html 02 0236`
